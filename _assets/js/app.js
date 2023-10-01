@@ -204,9 +204,9 @@ async function getData(){
 
 let modalAmplop = document.getElementById('modal-amplop');
 let btnAmplop = document.getElementById('btn-amplop');
-function copyRekening() {
+function copyRekening(id) {
     /* Get the text field */
-    let copyText = document.getElementById("noRekening");
+    let copyText = document.getElementById(id);
 
     /* Select the text field */
     copyText.select();
