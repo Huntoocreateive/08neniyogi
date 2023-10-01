@@ -922,16 +922,17 @@ $sizing-props: (
             @media screen and (min-width: breakpoint('sm')) { font-size: 7px; }
             @media screen and (min-width: breakpoint('lg')) { font-size: 10px; }
             &.img-wrapper-gallery-1 {
-                height: 30em;
+                height: 50em;
             }
             &.img-wrapper-gallery-2 {
-                height: 56em;
+                height: 75em;
             }
 
             img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
+                object-position: bottom;
             }
         }
     }

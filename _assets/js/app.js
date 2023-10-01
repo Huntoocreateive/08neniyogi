@@ -1,10 +1,10 @@
 
 var url = new URL(window.location.href);
-var u = url.searchParams.get("u");
-if (u==null || u=="") {
+var to = url.searchParams.get("to");
+if (to==null || to=="") {
     document.getElementById('guest').innerHTML = "Guest";
 } else {
-    document.getElementById('guest').innerHTML = u;
+    document.getElementById('guest').innerHTML = to;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -170,18 +170,16 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 async function getData(){
-    const response= await fetch('https://sheetdb.io/api/v1/wq7djw8lx0sof?sort_by=date&sort_order=desc')
+    const response= await fetch('https://script.google.com/macros/s/AKfycbysTHIfiYJKmqn0sdmEVl1-aIhfNC3CbyEseiX9ST0zY1gdNoWZkcBe9ZpteHxb0466/exec?sheetName=NeniYogi');
     const data= await response.json();
-    if (data.length < 10) {
-        length = data.length;
-    } else {
-        length = 10;
-    }
+    length = data.length;
     let content ='';
     for(i=0;i<length;i++)
     {
-        const nama = data[i].nama;
-        const pesan = data[i].pesan;
+        sort = length - (i+1);
+        const nama = data[sort].nama;
+        const pesan = data[sort].pesan;
+        const date = data[sort].date;
         content +=
         `<div class="card mb-5">
             <div class="card-body">
@@ -202,7 +200,6 @@ async function getData(){
         </div>`
     }
     document.getElementById('message').innerHTML = content;
-
 }
 
 let modalAmplop = document.getElementById('modal-amplop');
@@ -224,7 +221,7 @@ function toggleModal() {
 }
 
 // Mengatur waktu akhir perhitungan mundur
-let countDownDate = new Date("Oct 16, 2022 14:00:00").getTime();
+let countDownDate = new Date("Oct 16, 2023 09:00:00").getTime();
 
 // Memperbarui hitungan mundur setiap 1 detik
 let x = setInterval(function() {
@@ -273,6 +270,8 @@ window.initMap = initMap;
 
 let formrsvp = document.getElementById('rsvp');
 
+let modalSuccess = document.getElementById('modal-tamu');
+
 formrsvp.addEventListener('submit', function(e){
     e.preventDefault();
     
@@ -288,46 +287,28 @@ formrsvp.addEventListener('submit', function(e){
             var kehadiran = radio.value;
         }
     }
+    
+    let body = {
+        "sheetName": "NeniYogi",
+        date,
+        nama,
+        nomor_hp,
+        kehadiran,
+        pesan,
+    }
 
-    fetch('https://sheetdb.io/api/v1/wq7djw8lx0sof', {
+    fetch('https://script.google.com/macros/s/AKfycbysTHIfiYJKmqn0sdmEVl1-aIhfNC3CbyEseiX9ST0zY1gdNoWZkcBe9ZpteHxb0466/exec', {
         method: 'POST',
-        body: JSON.stringify({
-            date,
-            nama,
-            nomor_hp,
-            kehadiran,
-            pesan,
-        }),
+        mode: 'no-cors',
+        body: JSON.stringify(body),
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
         }
-    }).then(function(response){
-        return response.json();
-    }).then(function(data){
-        clearForm();
-        toggleModalSuccess()
+    }).then(function(){
+        modalSuccess.classList.toggle('show')
+        modalSuccess.classList.toggle('d-block')
     }).catch(error => console.error('Error:', error));
 });
-
-function clearForm() {
-    let nama = document.getElementById('nama');
-    let nomor_hp = document.getElementById('nomor_hp');
-    let pesan = document.getElementById('pesan');
-
-    nama.value = '';
-    nomor_hp.value = '';
-    pesan.value = '';
-    
-    var radios = document.getElementsByName('kehadiran');
-    for (var radio of radios)
-    {
-        if (radio.checked) {
-            radio.removeAttribute('checked');
-        }
-    }
-}
-
-let modalSuccess = document.getElementById('modal-tamu');
 
 function successTamu() {
     document.location.reload();
